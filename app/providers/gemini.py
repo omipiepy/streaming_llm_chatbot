@@ -29,7 +29,7 @@ class GeminiProvider:
 
         url = (
             f"{settings.gemini_api_url}/"
-            f"{settings.gemini_model_name}:generateContent"
+            f"{settings.gemini_model_name}:streamGenerateContent"
         )
 
         params = {
@@ -48,48 +48,42 @@ class GeminiProvider:
 
 
         async with httpx.AsyncClient(timeout=None) as client:
+
             response = await client.post(
                 url,
                 params=params,
                 json=payload
             )
 
-            async with httpx.AsyncClient(timeout=None) as client:
+            data = response.json()
+            if isinstance(data, list):
+                for item in data:
+                    candidates = item.get("candidates", [])
+                    if not candidates:
+                        continue
 
-                response = await client.post(
-                    url,
-                    params=params,
-                    json=payload
-                )
 
-                data = response.json()
-
-                candidates = data.get("candidates", [])
-
-                if not candidates:
-                    return
-
-                parts = (
-                    candidates[0]
-                    .get("content", {})
-                    .get("parts", [])
-                )
-
-                if not parts:
-                    return
-
-                text = parts[0].get("text", "")
-
-                if text:
-                    if prompt.thinking:
-                        print(text, end="", flush=True)
-
-                    yield ChatResponse(
-                        content=text,
-                        done=False
+                    parts = (
+                        candidates[0]
+                        .get("content", {})
+                        .get("parts", [])
                     )
 
-                yield ChatResponse(
-                    content="",
-                    done=True
-                )
+                    if not parts:
+                        return
+
+                    text = parts[0].get("text", "")
+
+                    if text:
+                        if prompt.thinking:
+                            print(text, end="", flush=True)
+
+                        yield ChatResponse(
+                            content=text,
+                            done=False
+                        )
+
+            yield ChatResponse(
+                content="",
+                done=True
+            )

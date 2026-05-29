@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("--provider", default="ollama")
 parser.add_argument("--thinking", default="false")
-
+parser.add_argument("--timeout" , default="30")
 args = parser.parse_args()
 
 setup_logging()
@@ -54,7 +54,7 @@ async def main():
             print("\nThinking...\n")
         print("AI: ", end="", flush=True)
 
-        response = await service.chat(ChatRequest(prompt=user_input, provider=args.provider, thinking=args.thinking))
+        response = await service.chat(ChatRequest(prompt=user_input, provider=args.provider, thinking=args.thinking, timeout=args.timeout))
 
         if args.thinking.lower()=="false":
             print(f"{response}")

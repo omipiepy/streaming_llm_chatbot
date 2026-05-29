@@ -20,7 +20,7 @@ class ChatService:
             async def task():
                 return await run_with_timeout(
                     provider.generate(prompt),
-                    timeout=30
+                    timeout=prompt.timeout
                 )
 
             return await retry_async(
