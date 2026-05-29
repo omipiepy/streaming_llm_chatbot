@@ -27,7 +27,7 @@ The architecture is designed to be easily extensible for adding new providers wi
 
 ## Project Structure
 
-
+```
 streaming_llm_chatbot/
 ├── .env
 ├── .gitignore
@@ -57,7 +57,7 @@ streaming_llm_chatbot/
 │   ├── stream_test.py
 │   └── validation_test.py
 └── uv.lock
-
+```
 ---
 
 ## Installation
