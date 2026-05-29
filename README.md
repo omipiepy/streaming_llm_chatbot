@@ -48,15 +48,15 @@ llm_chatbot/
 ## Installation
 
 
-```git clone https://github.com/omipiepy/streaming_llm_chatbot.git
-cd streaming_llm_chatbot```
+git clone https://github.com/omipiepy/streaming_llm_chatbot.git
+cd streaming_llm_chatbot
 
-```python -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate   # Windows
-source .venv/bin/activate  # Linux/Mac```
+source .venv/bin/activate  # Linux/Mac
 
-```pip install -r requirements.txt
-# or
+pip install -r requirements.txt
+
 uv sync
 Usage
 python -m app.main --provider ollama
@@ -65,9 +65,9 @@ CLI Interaction
 You: hello
 AI: Hello. How can I assist you today?
 
-Type exit to quit.```
+Type exit to quit.
 
-#Architecture
+## Architecture
 
 User Input
 → ChatService
@@ -83,7 +83,7 @@ providers = {
     "ollama": OllamaProvider,
     "gemini": GeminiProvider
 }
-##Logging
+## Logging
 
 Logs are stored in logs/:
 
