@@ -1,14 +1,20 @@
 # Streaming LLM Chatbot
 
-A modular and extensible chatbot system that supports multiple large language model providers such as Ollama and Google Gemini. The system is designed with a clean architecture that separates concerns between service, provider, and utility layers.
+A chatbot system that supports multiple large language model providers such as Ollama and Google Gemini. The system is designed with a clean architecture that separates concerns between service, provider, schemas and utility layers. This project is focused on handling asynchronous request for streaming LLM.
 
 ---
 
 ## Overview
 
-This project provides a unified interface for interacting with different LLM providers. It includes retry handling, timeout control, and a CLI-based interaction system.
+This project provide unified interface for providers: ollama and gemini
 
-The architecture is designed to be easily extensible for adding new providers without modifying the core service logic.
+We can choose one of the provider which is passed through arguments.
+
+We have also implemented logging system where info of each steps are stored in *.log files .
+
+We have also encoutered failure so there is a system for retrying 3 times if there is failure.
+
+We have also implemented timeout of 30s.
 
 ---
 
@@ -28,9 +34,7 @@ The architecture is designed to be easily extensible for adding new providers wi
 ## Project Structure
 
 ```
-streaming_llm_chatbot/
-├── .env
-├── .gitignore
+llm_chatbot/
 ├── app/
 │   ├── core/
 │   │   ├── config.py
@@ -63,18 +67,32 @@ streaming_llm_chatbot/
 ## Installation
 
 ```
-git clone https://github.com/omipiepy/streaming_llm_chatbot.git
-cd streaming_llm_chatbot
+git clone https://github.com/omipiepy/llm_chatbot.git
+cd llm_chatbot
 ```
 ```
-python -m venv .venv
+uv init
+uv .venv
 .venv\Scripts\activate   # Windows
 source .venv/bin/activate  # Linux/Mac
 ```
 ```
 uv sync
 ```
-### Usage
+---
+## Setting up environment
+- Make .env file and insert these things
+```
+LLAMA_API_URL = "http://localhost:11434"
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+GEMINI_API_KEY = "your_api_key"
+GEMINI_MODEL_NAME = "gemini-2.5-flash"
+OLLAMA_MODEL_NAME = "deepseek-r1:1.5b"
+default_provider = "ollama"
+```
+
+### Running this application
+you can pass an argument and in default it will be ollama for provider and false in thinking
 ```
 python -m app.main --provider=ollama --thinking=true
 python -m app.main --provider gemini --thinking=false
@@ -91,8 +109,8 @@ Type exit to quit.
 
 ### User Input
 - ChatService
-- Provider Factory
-- Selected LLM Provider
+- Provider 
+- Thinking or not
 
 ### Logging
 
@@ -105,6 +123,7 @@ error.log
 - Logs are excluded via .gitignore.
 
 ### Testing
+Testing for validation and streaming
 ```
 pytest -q
 ```
