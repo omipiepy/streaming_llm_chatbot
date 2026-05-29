@@ -72,17 +72,14 @@ python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 ```
 ```
-pip install -r requirements.txt
-```
-```
 uv sync
 ```
-# Usage
+### Usage
 ```
-python -m app.main --provider ollama
-python -m app.main --provider gemini
+python -m app.main --provider=ollama --thinking=true
+python -m app.main --provider gemini --thinking=false
 ```
-# CLI Interaction
+### CLI Interaction
 ```
 You: hello
 AI: Hello. How can I assist you today?
@@ -92,24 +89,12 @@ Type exit to quit.
 
 ## Architecture
 
-# User Input
+### User Input
 - ChatService
 - Provider Factory
 - Selected LLM Provider
 
-# Adding a New Provider
-- Create provider in app/providers/
-- Implement:
-```
-async def generate(self, prompt: ChatRequest) -> str
-Register in factory:
-providers = {
-    "ollama": OllamaProvider,
-    "gemini": GeminiProvider
-}
-```
-
-## Logging
+### Logging
 
 - Logs are stored in logs/:
 ```
@@ -119,7 +104,7 @@ error.log
 
 - Logs are excluded via .gitignore.
 
-## Testing
+### Testing
 ```
 pytest
 ```
