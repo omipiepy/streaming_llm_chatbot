@@ -29,7 +29,7 @@ class GeminiProvider:
 
         url = (
             f"{settings.gemini_api_url}/"
-            f"{settings.gemini_model_name}:streamGenerateContent"
+            f"{settings.gemini_model_name}:generateContent"
         )
 
         params = {

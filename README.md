@@ -106,7 +106,7 @@ error.log
 
 ### Testing
 ```
-pytest
+pytest -q
 ```
 
 ## Notes

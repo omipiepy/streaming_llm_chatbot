@@ -14,9 +14,6 @@ parser.add_argument("--thinking", default="false")
 
 args = parser.parse_args()
 
-print(args.provider)
-print(args.thinking)
-
 setup_logging()
 
 logger = get_logger(__name__)
