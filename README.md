@@ -28,20 +28,35 @@ The architecture is designed to be easily extensible for adding new providers wi
 ## Project Structure
 
 
-llm_chatbot/
-│
+streaming_llm_chatbot/
+├── .env
+├── .gitignore
 ├── app/
-│ ├── core/
-│ ├── providers/
-│ ├── schemas/
-│ ├── services/
-│ ├── utils/
-│ ├── main.py
-│
-├── tests/
-├── logs/
+│   ├── core/
+│   │   ├── config.py
+│   │   └── logger.py
+│   ├── main.py
+│   ├── providers/
+│   │   ├── base.py
+│   │   ├── factory.py
+│   │   ├── gemini.py
+│   │   └── ollama.py
+│   ├── schemas/
+│   │   ├── request.py
+│   │   └── response.py
+│   ├── services/
+│   │   └── chat_services.py
+│   └── utils/
+│       ├── retry.py
+│       └── timer.py
+├── main.py
 ├── pyproject.toml
-└── README.md
+├── README.md
+├── tests/
+│   ├── request_test.py
+│   ├── stream_test.py
+│   └── validation_test.py
+└── uv.lock
 
 ---
 
