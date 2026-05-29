@@ -80,7 +80,7 @@ source .venv/bin/activate  # Linux/Mac
 uv sync
 ```
 ---
-## Setting up environment
+### Setting up environment
 - Make .env file and insert these things
 ```
 LLAMA_API_URL = "http://localhost:11434"

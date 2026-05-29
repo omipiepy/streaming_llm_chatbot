@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
 import json
 import httpx
-
+from app.utils.retry import retry_async
 from app.core.config import settings
 from app.core.logger import setup_logging, get_logger
 from app.schemas.request import ChatRequest
@@ -33,8 +33,7 @@ class GeminiProvider:
         )
 
         params = {
-            "key": settings.gemini_api_key,
-            "alt": "sse"
+            "key": settings.gemini_api_key
         }
 
         payload = {
@@ -47,55 +46,48 @@ class GeminiProvider:
             ]
         }
 
+
         async with httpx.AsyncClient(timeout=None) as client:
-
-            logger.info(f"Streaming Request URL: {url}")
-
-            async with client.stream(
-                "POST",
+            response = await client.post(
                 url,
                 params=params,
                 json=payload
-            ) as response:
+            )
 
-                response.raise_for_status()
+            async with httpx.AsyncClient(timeout=None) as client:
 
-                async for line in response.aiter_lines():
+                response = await client.post(
+                    url,
+                    params=params,
+                    json=payload
+                )
 
-                    if not line:
-                        continue
+                data = response.json()
 
+                candidates = data.get("candidates", [])
 
-                    if line.startswith("data: "):
-                        line = line.removeprefix("data: ")
-                    try:
-                        data = json.loads(line)
+                if not candidates:
+                    return
 
-                        candidates = data.get("candidates", [])
+                parts = (
+                    candidates[0]
+                    .get("content", {})
+                    .get("parts", [])
+                )
 
-                        if not candidates:
-                            continue
+                if not parts:
+                    return
 
-                        parts = (
-                            candidates[0]
-                            .get("content", {})
-                            .get("parts", [])
-                        )
+                text = parts[0].get("text", "")
 
-                        if not parts:
-                            continue
+                if text:
+                    if prompt.thinking:
+                        print(text, end="", flush=True)
 
-                        text = parts[0].get("text", "")
-                        if prompt.thinking:
-                            print(text, end="", flush=True)
-                        if text:
-                            yield ChatResponse(
-                                content=text,
-                                done=False
-                            )
-
-                    except json.JSONDecodeError:
-                        continue
+                    yield ChatResponse(
+                        content=text,
+                        done=False
+                    )
 
                 yield ChatResponse(
                     content="",
